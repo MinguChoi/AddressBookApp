@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">AddressBook App</string>
+    <string name="title">Address</string>
+    <string name="add">Add Address</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="hint">Type your name</string>
+    <string name="cancel">CANCEL</string>
+    <string name="ok">OK</string>
+    <string name="add_button">+</string>
+    <string name="delete">DELETE</string>
+</resources>
