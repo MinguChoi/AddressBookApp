@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
         arrList = new ArrayList<Address>();
         adapter = new AddressAdapter(arrList, this);
 
-
         ListView listView = (ListView) findViewById(R.id.main_list);
         listView.setAdapter(adapter);
 
