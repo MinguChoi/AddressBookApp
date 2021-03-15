@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 public class AddAddress extends AppCompatActivity {
 
+    private final String TAG = "AddressBook";
     private static final int SELECT_PICTURE = 1;
     private String selectedImagePath;
 
@@ -42,6 +44,7 @@ public class AddAddress extends AppCompatActivity {
         cancel = findViewById(R.id.cancel_button);
         ok = findViewById(R.id.ok_button);
 
+        // Event Click Listener
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,9 +63,6 @@ public class AddAddress extends AppCompatActivity {
                     db.close();
                     // back to mainActivity
                     Intent intent = new Intent(AddAddress.this, MainActivity.class);
-//                    intent.putExtra("name", name);
-//                    intent.putExtra("phone", phone);
-//                    intent.putExtra("email", email);
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -87,9 +87,27 @@ public class AddAddress extends AppCompatActivity {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent,
                         "Select Picture"), SELECT_PICTURE);
+                Log.i(TAG, "Go Gallery to choose an image");
             }
         });
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                profileImage.setImageURI(selectedImageUri);
+                selectedImagePath = getPath(selectedImageUri);
+                Log.i(TAG, "Select an image from gallery - URI : " + selectedImageUri + "\n"
+                + "path : " + selectedImagePath);
+            }
+            Log.i(TAG, "after gallery, result ok but no select picture");
+        }
+        Log.i(TAG, "after gallery, no result ok");
+    }
+
+    // Member Method - Custom
 
     public boolean isEmpty(EditText etxt) {
         if(etxt.getText().toString().trim().length()>0)
@@ -98,23 +116,11 @@ public class AddAddress extends AppCompatActivity {
         return true;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                Uri selectedImageUri = data.getData();
-                selectedImagePath = getPath(selectedImageUri);
-            }
-        }
-    }
-
     /**
      * helper to retrieve the path of an image URI
      */
     public String getPath(Uri uri) {
-        // just some safety built in
         if( uri == null ) {
-            // TODO perform some logging or show user feedback
             return null;
         }
         // try to retrieve the image from the media store first
